@@ -24,14 +24,19 @@ function play() {
     var divWidth = $(this).attr('class').substr(1, 2);
     var divHeight = $(this).attr('class').substr(4);
 
-    if (direction === "vert") {
-      $(this).replaceWith("<div class='b08x" + "0" + divHeight/2 + "'></div><div class='b08x" + "0" + divHeight/2 + "'></div>");
-    } else {
-      $(this).replaceWith("<div class='b" + "0" + divWidth/2 + "x08'></div><div class='b" + "0" + divWidth/2 + "x08'></div>");
-    }
-    determineDirection();
+    splitBox(divWidth, divHeight);
     countUp();
+    determineDirection();
   });
+}
+
+function splitBox(width, height) {
+
+  if (direction === "horiz") {
+    $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "'></div><div class='b" + width + "x0" + height/2 + "'></div>");
+  } else {
+    $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "'></div><div class='b0" + width/2 + "x" + height + "'></div>");
+  }
 }
 
 function countUp() {
