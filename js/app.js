@@ -74,8 +74,10 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          if (((divTop2 === ((top + height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
-            console.log("it's working?");
+          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
+          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left + width + 2), newDivClass, divClass2);
+          if (((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
+            console.log("it's working? (left)");
           }
         });
       } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
@@ -83,8 +85,10 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          if ((divTop2 === ((top + height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
-            console.log("it's working?");
+          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
+          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left - width - 2), newDivClass, divClass2);
+          if ((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
+            console.log("it's working? (right)");
           }
         });
       }
