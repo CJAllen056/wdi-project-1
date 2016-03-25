@@ -21,10 +21,12 @@ $(play);
 var turn = 0;
 var direction = "horiz";
 
+
 // The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
 
 function play() {
   $("main").on("click", "div", function() {
+    var divClass = $(this).attr('class');
     var divWidth = $(this).attr('class').substr(1, 2);
     var divHeight = $(this).attr('class').substr(4);
     var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
@@ -32,6 +34,7 @@ function play() {
     var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
     var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
     splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
+    checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
     countUp();
     determineDirection();
   });
@@ -41,25 +44,59 @@ function play() {
 
 function splitBox(width, height, widthpx, heightpx, top, left) {
   if (direction === "horiz") {
-    if (height <= 1) return;
-    $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
-  } else {
-    if (width <= 1) return;
-    $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
+    if (height <= 1) {
+      turn--;
+      return;
+    } else {
+      $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
+    }
+  } else if (direction === "vert"){
+    if (width <= 1) {
+      turn--;
+      return;
+    } else {
+      $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
+    }
   }
 }
 
-function checkMatches() {
-  
+function checkMatches(width, height, top, left, classX) {
+  if (direction === "horiz") {
+    var newDivClass = classX.substr(0, 4) + "0" + classX.substr(4)/2;
+    $("main div").each(function() {
+      var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+      var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+      var divClass = $(this).attr('class');
+      if (divTop === top && (divLeft === (left + width + 2)) && newDivClass === divClass) {
+        $("main div").each(function() {
+          var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+          var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+          var divClass2 = $(this).attr('class');
+          if (((divTop2 === ((top + height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
+            console.log("it's working?");
+          }
+        });
+      } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
+        $("main div").each(function() {
+          var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+          var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+          var divClass2 = $(this).attr('class');
+          if ((divTop2 === ((top + height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
+            console.log("it's working?");
+          }
+        });
+      }
+    });
+  }
 }
 
-// The countUp function counts what turn you are on, adding one to the counter for every click
+// The countUp function counts what turn you are on, adding one to the counter for every click.
 
 function countUp() {
   turn++;
 }
 
-// The determineDirection function switches between horizontal and vertical splits, alternating every turn
+// The determineDirection function switches between horizontal and vertical splits, alternating every turn.
 
 function determineDirection() {
   if (turn % 2 === 0) {
