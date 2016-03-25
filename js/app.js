@@ -15,32 +15,51 @@
 
 $(play);
 
+// Turn determines how many turns have passed since the beginning of the game
+// Direction is used to determine which direction the boxes will split when clicked
+
 var turn = 0;
 var direction = "horiz";
 
+// The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
+
 function play() {
-  $("body").on("click", "div", function() {
+  $("main").on("click", "div", function() {
     var divWidth = $(this).attr('class').substr(1, 2);
     var divHeight = $(this).attr('class').substr(4);
-    splitBox(divWidth, divHeight);
+    var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
+    var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
+    var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+    var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+    splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
     countUp();
     determineDirection();
   });
 }
 
-function splitBox(width, height) {
+// The splitBox function splits any clicked box in half, replacing it with two boxes of half the size. The direction of the split is determined by the variable: direction. If the box is too small, it cannot be split. It positions the new boxes absolutely, based on the previous boxes position.
+
+function splitBox(width, height, widthpx, heightpx, top, left) {
   if (direction === "horiz") {
     if (height <= 1) return;
-    $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "'></div><div class='b" + width + "x0" + height/2 + "'></div>");
+    $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
   } else {
     if (width <= 1) return;
-    $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "'></div><div class='b0" + width/2 + "x" + height + "'></div>");
+    $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
   }
 }
+
+function checkMatches() {
+  
+}
+
+// The countUp function counts what turn you are on, adding one to the counter for every click
 
 function countUp() {
   turn++;
 }
+
+// The determineDirection function switches between horizontal and vertical splits, alternating every turn
 
 function determineDirection() {
   if (turn % 2 === 0) {
