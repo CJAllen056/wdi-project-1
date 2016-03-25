@@ -37,6 +37,8 @@ function play() {
     checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
     countUp();
     determineDirection();
+    displayTurn();
+    displayDirection();
   });
 }
 
@@ -87,6 +89,20 @@ function checkMatches(width, height, top, left, classX) {
         });
       }
     });
+  }
+}
+
+// The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
+
+function displayTurn() {
+  $("#turns").html(turn);
+}
+
+function displayDirection() {
+  if (direction === "horiz") {
+    $("#direction").html("Horizontal");
+  } else {
+    $("#direction").html("Vertical");
   }
 }
 
