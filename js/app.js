@@ -93,6 +93,37 @@ function checkMatches(width, height, top, left, classX) {
         });
       }
     });
+  } else if (direction === "vert") {
+    var newDivClass = "b0" + classX.substr(1, 2)/2 + classX.substr(3);
+    console.log(newDivClass);
+    $("main div").each(function() {
+      var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+      var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+      var divClass = $(this).attr('class');
+      if (divTop === (top + height + 2) && (divLeft === left) && newDivClass === divClass) {
+        $("main div").each(function() {
+          var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+          var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+          var divClass2 = $(this).attr('class');
+          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
+          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left + width + 2), newDivClass, divClass2);
+          if (divTop2 === (top + height + 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
+            console.log("it's working? (left)");
+          }
+        });
+      } else if (divTop === (top - height - 2) && (divLeft === left) && newDivClass === divClass) {
+        $("main div").each(function() {
+          var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+          var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+          var divClass2 = $(this).attr('class');
+          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
+          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left - width - 2), newDivClass, divClass2);
+          if (divTop2 === (top - height - 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
+            console.log("it's working? (right)");
+          }
+        });
+      }
+    });
   }
 }
 
