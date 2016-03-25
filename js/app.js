@@ -19,11 +19,9 @@ var turn = 0;
 var direction = "horiz";
 
 function play() {
-
-  $("div").click(function() {
+  $("body").on("click", "div", function() {
     var divWidth = $(this).attr('class').substr(1, 2);
     var divHeight = $(this).attr('class').substr(4);
-
     splitBox(divWidth, divHeight);
     countUp();
     determineDirection();
@@ -31,10 +29,11 @@ function play() {
 }
 
 function splitBox(width, height) {
-
   if (direction === "horiz") {
+    if (height <= 1) return;
     $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "'></div><div class='b" + width + "x0" + height/2 + "'></div>");
   } else {
+    if (width <= 1) return;
     $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "'></div><div class='b0" + width/2 + "x" + height + "'></div>");
   }
 }
