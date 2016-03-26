@@ -39,7 +39,14 @@ function setListeners() {
     var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
     var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
     var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+    if (direction === "horiz" && (divHeight <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
+      return;
+    } else if (direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
+      return;
+    }
     splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft, divClass);
+    matchedCountdown();
+    removeMatchedAtZero();
     checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
     countUp();
     determineDirection();
@@ -51,22 +58,26 @@ function setListeners() {
 
 function splitBox(width, height, widthpx, heightpx, top, left, classX) {
   if (direction === "horiz") {
-    if (height <= 1 || classX.indexOf("matchedDiv") !== -1) {
-      turn--;
-      return;
-    } else {
+    // if (height <= 1 || classX.indexOf("matchedDiv") !== -1) {
+    //   turn--;
+    //   return;
+    // } else {
       $(event.target).replaceWith("<div id='" + divId + "' class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
       divId+=2;
-    }
+    // }
   } else if (direction === "vert"){
-    if (width <= 1 || classX.indexOf("matchedDiv") !== -1) {
-      turn--;
-      return;
-    } else {
+    // if (width <= 1 || classX.indexOf("matchedDiv") !== -1) {
+    //   turn--;
+    //   return;
+    // } else {
       $(event.target).replaceWith("<div id='" + divId + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
       divId+=2;
     }
   }
+// }
+
+function dontRunOnSmallOrGrey() {
+
 }
 
 // The checkMatches function checks the boxes surrounding the clicked box to see if there is a group of 4 boxes of the same size and shape.
@@ -85,7 +96,7 @@ function checkMatches(width, height, top, left, classX) {
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if (((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
-            setToMatched(this, divId);
+            setToMatched(this, divId, height);
           }
         });
       } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
@@ -94,7 +105,7 @@ function checkMatches(width, height, top, left, classX) {
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if ((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
-            setToMatched(this, divId);
+            setToMatched(this, divId, height);
           }
         });
       }
@@ -112,7 +123,7 @@ function checkMatches(width, height, top, left, classX) {
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if (divTop2 === (top + height + 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            setToMatched(this, divId);
+            setToMatched(this, divId, height);
           }
         });
       } else if (divTop === (top - height - 2) && (divLeft === left) && newDivClass === divClass) {
@@ -121,7 +132,7 @@ function checkMatches(width, height, top, left, classX) {
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if (divTop2 === (top - height - 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            setToMatched(this, divId);
+            setToMatched(this, divId, height);
           }
         });
       }
@@ -129,13 +140,43 @@ function checkMatches(width, height, top, left, classX) {
   }
 }
 
-function setToMatched(element, id) {
-  var newestDiv = "#" + (divId - 2);
-  var newestDiv2 = "#" + (divId - 1);
-  $(element).attr("class", $(element).attr("class") + " matchedDiv");
-  $("#" + id).attr("class", $("#" + id).attr("class") + " matchedDiv");
-  $(newestDiv).attr("class", $(newestDiv).attr("class") + " matchedDiv");
-  $(newestDiv2).attr("class", $(newestDiv2).attr("class") + " matchedDiv");
+// The setToMatched function gives the matched boxes found in the checkMatches function the correct properties for matched boxes.
+
+function setToMatched(element, id, height) {
+  var div1 = $("#" + (divId - 2));
+  var div2 = $("#" + (divId - 1));
+  var div3 = $(element);
+  var div4 = $("#" + id);
+
+  div1.attr("class", div1.attr("class") + " matchedDiv");
+  div2.attr("class", div2.attr("class") + " matchedDiv");
+  div3.attr("class", div3.attr("class") + " matchedDiv");
+  div4.attr("class", div4.attr("class") + " matchedDiv");
+
+  div1.html(turn);
+  div2.html(turn);
+  div3.html(turn);
+  div4.html(turn);
+
+  div1.css("line-height", height/2 + "px");
+  div2.css("line-height", height/2 + "px");
+  div3.css("line-height", height/2 + "px");
+  div4.css("line-height", height/2 + "px");
+}
+
+function matchedCountdown() {
+  $(".matchedDiv").each(function() {
+    var currentVal = $(this).html();
+    $(this).html(currentVal - 1);
+  });
+}
+
+function removeMatchedAtZero() {
+  $(".matchedDiv").each(function() {
+    if ($(this).html() === "0") {
+      $(this).remove();
+    }
+  });
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
