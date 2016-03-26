@@ -77,23 +77,24 @@ function checkMatches(width, height, top, left, classX) {
     $("main div").each(function() {
       var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
       var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-      var divClass = $(this).attr('class');
+      var divClass = $(this).attr("class");
+      var divId = $(this).attr("id");
       if (divTop === top && (divLeft === (left + width + 2)) && newDivClass === divClass) {
         $("main div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-          var divClass2 = $(this).attr('class');
+          var divClass2 = $(this).attr("class");
           if (((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
-            setToMatched(this);
+            setToMatched(this, divId);
           }
         });
       } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
         $("main div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-          var divClass2 = $(this).attr('class');
+          var divClass2 = $(this).attr("class");
           if ((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
-            setToMatched(this);
+            setToMatched(this, divId);
           }
         });
       }
@@ -103,23 +104,24 @@ function checkMatches(width, height, top, left, classX) {
     $("main div").each(function() {
       var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
       var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-      var divClass = $(this).attr('class');
+      var divClass = $(this).attr("class");
+      var divId = $(this).attr("id");
       if (divTop === (top + height + 2) && (divLeft === left) && newDivClass === divClass) {
         $("main div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-          var divClass2 = $(this).attr('class');
+          var divClass2 = $(this).attr("class");
           if (divTop2 === (top + height + 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            setToMatched(this);
+            setToMatched(this, divId);
           }
         });
       } else if (divTop === (top - height - 2) && (divLeft === left) && newDivClass === divClass) {
         $("main div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-          var divClass2 = $(this).attr('class');
+          var divClass2 = $(this).attr("class");
           if (divTop2 === (top - height - 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            setToMatched(this);
+            setToMatched(this, divId);
           }
         });
       }
@@ -127,10 +129,11 @@ function checkMatches(width, height, top, left, classX) {
   }
 }
 
-function setToMatched(element, top, left) {
+function setToMatched(element, id) {
   var newestDiv = "#" + (divId - 2);
   var newestDiv2 = "#" + (divId - 1);
   $(element).attr("class", $(element).attr("class") + " matchedDiv");
+  $("#" + id).attr("class", $("#" + id).attr("class") + " matchedDiv");
   $(newestDiv).attr("class", $(newestDiv).attr("class") + " matchedDiv");
   $(newestDiv2).attr("class", $(newestDiv2).attr("class") + " matchedDiv");
 }
