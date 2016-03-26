@@ -19,6 +19,10 @@ main div {
   position: absolute;
 }
 
+.matchedDiv {
+  background: grey;
+}
+
 .b01x01 {
   width: 38px;
   height: 38px;

@@ -25,7 +25,10 @@ var direction = "horiz";
 // The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
 
 function play() {
-  $("main").on("click", "div", function() {
+  $("main").on("click", "div", setListeners);
+}
+
+function setListeners() {
     var divClass = $(this).attr('class');
     var divWidth = $(this).attr('class').substr(1, 2);
     var divHeight = $(this).attr('class').substr(4);
@@ -39,8 +42,7 @@ function play() {
     determineDirection();
     displayTurn();
     displayDirection();
-  });
-}
+  }
 
 // The splitBox function splits any clicked box in half, replacing it with two boxes of half the size. The direction of the split is determined by the variable: direction. If the box is too small, it cannot be split. It positions the new boxes absolutely, based on the previous boxes position.
 
@@ -62,6 +64,8 @@ function splitBox(width, height, widthpx, heightpx, top, left) {
   }
 }
 
+// The checkMatches function checks the boxes surrounding the clicked box to see if there is a group of 4 boxes of the same size and shape.
+
 function checkMatches(width, height, top, left, classX) {
   if (direction === "horiz") {
     var newDivClass = classX.substr(0, 4) + "0" + classX.substr(4)/2;
@@ -74,10 +78,8 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
-          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left + width + 2), newDivClass, divClass2);
           if (((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left + width + 2))) && newDivClass === divClass2) {
-            console.log("it's working? (left)");
+            setToMatched(this);
           }
         });
       } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
@@ -85,17 +87,14 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
-          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left - width - 2), newDivClass, divClass2);
           if ((divTop2 === (top + (height + 2)/2)) && (divLeft2 === (left - width - 2)) && newDivClass === divClass2) {
-            console.log("it's working? (right)");
+            setToMatched(this);
           }
         });
       }
     });
   } else if (direction === "vert") {
     var newDivClass = "b0" + classX.substr(1, 2)/2 + classX.substr(3);
-    console.log(newDivClass);
     $("main div").each(function() {
       var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
       var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
@@ -105,10 +104,8 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
-          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left + width + 2), newDivClass, divClass2);
           if (divTop2 === (top + height + 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            console.log("it's working? (left)");
+            setToMatched(this);
           }
         });
       } else if (divTop === (top - height - 2) && (divLeft === left) && newDivClass === divClass) {
@@ -116,15 +113,17 @@ function checkMatches(width, height, top, left, classX) {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr('class');
-          // console.log(divTop, divTop2, divLeft, divLeft2, newDivClass, divClass2);
-          // console.log(divTop2, (top + height + 2)/2, divLeft2, (left - width - 2), newDivClass, divClass2);
           if (divTop2 === (top - height - 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            console.log("it's working? (right)");
+            setToMatched(this);
           }
         });
       }
     });
   }
+}
+
+function setToMatched(element) {
+  $(element).attr("class", $(element).attr("class") + " matchedDiv");
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
