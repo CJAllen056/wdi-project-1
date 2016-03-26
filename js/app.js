@@ -20,6 +20,7 @@ $(play);
 
 var turn = 0;
 var direction = "horiz";
+var divId = 0;
 
 
 // The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
@@ -54,14 +55,16 @@ function splitBox(width, height, widthpx, heightpx, top, left, classX) {
       turn--;
       return;
     } else {
-      $(event.target).replaceWith("<div class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
+      $(event.target).replaceWith("<div id='" + divId + "' class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
+      divId+=2;
     }
   } else if (direction === "vert"){
     if (width <= 1 || classX.indexOf("matchedDiv") !== -1) {
       turn--;
       return;
     } else {
-      $(event.target).replaceWith("<div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
+      $(event.target).replaceWith("<div id='" + divId + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
+      divId+=2;
     }
   }
 }
@@ -124,8 +127,12 @@ function checkMatches(width, height, top, left, classX) {
   }
 }
 
-function setToMatched(element) {
+function setToMatched(element, top, left) {
+  var newestDiv = "#" + (divId - 2);
+  var newestDiv2 = "#" + (divId - 1);
   $(element).attr("class", $(element).attr("class") + " matchedDiv");
+  $(newestDiv).attr("class", $(newestDiv).attr("class") + " matchedDiv");
+  $(newestDiv2).attr("class", $(newestDiv2).attr("class") + " matchedDiv");
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
