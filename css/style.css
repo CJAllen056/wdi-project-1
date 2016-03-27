@@ -1,5 +1,33 @@
 body {
   text-align: center;
+  font-family:'Orbitron', sans-serif;
+}
+
+#scoreboard {
+  width: 90px;
+  height: 640px;
+  float: left;
+  color: white;
+  background: black;
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  height: 76px;
+  width: 76px;
+  border: 2px solid white;
+  margin: 5px;
+  line-height: 76px;
+}
+
+li#direction {
+  margin: 110px 5px 110px 5px;
 }
 
 main {

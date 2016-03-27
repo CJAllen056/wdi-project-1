@@ -44,7 +44,6 @@ function setListeners() {
     } else if (direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
       return;
     }
-    // checkForLoss();
     splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
     checkForLoss();
     matchedCountdown();
@@ -175,39 +174,7 @@ function replaceMatched() {
 
 }
 
-// function checkForLoss() {
-//   if (direction === "horiz") {
-//     $("main div").each(function() {
-//       if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
-//         $("main div").each(function() {
-//           if (($(this).attr("class").indexOf("matchedDiv") === -1) && $(this).attr("class").substr(4) >= 1) {
-//             return false;
-//           // } else if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
-//           //   return false;
-//           } else {
-//             // $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
-//             console.log("loser");
-//           }
-//         });
-//       }
-//     });
-//   } else if (direction === "vert") {
-//     $("main div").each(function() {
-//       if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
-//         $("main div").each(function() {
-//           if (($(this).attr("class").indexOf("matchedDiv") === -1) && $(this).attr("class").substr(1, 2) >= 1) {
-//             return false;
-//           // } else if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
-//           //   return false;
-//           } else {
-//             // $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
-//             console.log("loser");
-//           }
-//         });
-//       }
-//     });
-//   }
-// }
+// The checkForLoss function loops through all the divs in the play area and checks if there are any clickable ones. If not, it gives a Game Over message.
 
 function checkForLoss() {
   var divs = [];
@@ -217,10 +184,8 @@ function checkForLoss() {
         divs.push($(this).attr("class").substr(4));
       }
     });
-    console.log(divs); 
-    if (divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) {
+    if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) || divs.length === 0)  {
       $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
-      console.log("loser");
     }
   } else if (direction === "horiz") {
     $("main div").each(function() {
@@ -228,17 +193,11 @@ function checkForLoss() {
         divs.push($(this).attr("class").substr(1,2));
       }
     });
-    console.log(divs); 
-    if (divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) {
+    if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) || divs.length === 0) {
       $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
-      console.log("loser");
     }
   }
 }
-
-// function checkForLoss() {
-//   console.log($("main div").each(function() {return $("main div")}));
-// }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
 
