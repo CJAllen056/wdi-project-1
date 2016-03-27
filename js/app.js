@@ -32,9 +32,9 @@ function play() {
 // The setListeners function is the function that play uses to set the listeners....
 
 function setListeners() {
-    var divClass = $(this).attr('class');
-    var divWidth = $(this).attr('class').substr(1, 2);
-    var divHeight = $(this).attr('class').substr(4);
+    var divClass = $(this).attr("class");
+    var divWidth = $(this).attr("class").substr(1, 2);
+    var divHeight = $(this).attr("class").substr(4);
     var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
     var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
     var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
@@ -44,7 +44,9 @@ function setListeners() {
     } else if (direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
       return;
     }
-    splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft, divClass);
+    // checkForLoss();
+    splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
+    checkForLoss();
     matchedCountdown();
     removeMatchedAtZero();
     checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
@@ -56,28 +58,14 @@ function setListeners() {
 
 // The splitBox function splits any clicked box in half, replacing it with two boxes of half the size. The direction of the split is determined by the variable: direction. If the box is too small, it cannot be split. It positions the new boxes absolutely, based on the previous boxes position.
 
-function splitBox(width, height, widthpx, heightpx, top, left, classX) {
+function splitBox(width, height, widthpx, heightpx, top, left) {
   if (direction === "horiz") {
-    // if (height <= 1 || classX.indexOf("matchedDiv") !== -1) {
-    //   turn--;
-    //   return;
-    // } else {
-      $(event.target).replaceWith("<div id='" + divId + "' class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
-      divId+=2;
-    // }
+    $(event.target).replaceWith("<div id='" + divId + "' class='b" + width + "x0" + height/2 + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b" + width + "x0" + height/2 + "' style='top: " + (top + (heightpx/2 + 1)) + "px; left: " + left + "px'></div>");
+    divId+=2;
   } else if (direction === "vert"){
-    // if (width <= 1 || classX.indexOf("matchedDiv") !== -1) {
-    //   turn--;
-    //   return;
-    // } else {
-      $(event.target).replaceWith("<div id='" + divId + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
-      divId+=2;
-    }
+    $(event.target).replaceWith("<div id='" + divId + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + left + "px'></div><div id='" + (divId + 1) + "' class='b0" + width/2 + "x" + height + "' style='top: " + top + "px; left: " + (left + (widthpx/2 + 1)) + "px'></div>");
+    divId+=2;
   }
-// }
-
-function dontRunOnSmallOrGrey() {
-
 }
 
 // The checkMatches function checks the boxes surrounding the clicked box to see if there is a group of 4 boxes of the same size and shape.
@@ -164,12 +152,16 @@ function setToMatched(element, id, height) {
   div4.css("line-height", height/2 + "px");
 }
 
+// The matchedCountdown function makes the html values in matched (greyed out) divs count down by 1 each turn
+
 function matchedCountdown() {
   $(".matchedDiv").each(function() {
     var currentVal = $(this).html();
     $(this).html(currentVal - 1);
   });
 }
+
+// The matched removeMatchedAtZero function makes matched boxes whose html values reach zero dissappear
 
 function removeMatchedAtZero() {
   $(".matchedDiv").each(function() {
@@ -178,6 +170,75 @@ function removeMatchedAtZero() {
     }
   });
 }
+
+function replaceMatched() {
+
+}
+
+// function checkForLoss() {
+//   if (direction === "horiz") {
+//     $("main div").each(function() {
+//       if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
+//         $("main div").each(function() {
+//           if (($(this).attr("class").indexOf("matchedDiv") === -1) && $(this).attr("class").substr(4) >= 1) {
+//             return false;
+//           // } else if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
+//           //   return false;
+//           } else {
+//             // $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
+//             console.log("loser");
+//           }
+//         });
+//       }
+//     });
+//   } else if (direction === "vert") {
+//     $("main div").each(function() {
+//       if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
+//         $("main div").each(function() {
+//           if (($(this).attr("class").indexOf("matchedDiv") === -1) && $(this).attr("class").substr(1, 2) >= 1) {
+//             return false;
+//           // } else if ($(this).attr("class").indexOf("matchedDiv") !== -1) {
+//           //   return false;
+//           } else {
+//             // $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
+//             console.log("loser");
+//           }
+//         });
+//       }
+//     });
+//   }
+// }
+
+function checkForLoss() {
+  var divs = [];
+  if (direction === "vert") {
+    $("main div").each(function() {
+      if ($(this).attr("class").indexOf("matchedDiv") === -1) {
+        divs.push($(this).attr("class").substr(4));
+      }
+    });
+    console.log(divs); 
+    if (divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) {
+      $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
+      console.log("loser");
+    }
+  } else if (direction === "horiz") {
+    $("main div").each(function() {
+      if ($(this).attr("class").indexOf("matchedDiv") === -1) {
+        divs.push($(this).attr("class").substr(1,2));
+      }
+    });
+    console.log(divs); 
+    if (divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) {
+      $("main").html("<div class='b08x16 matchedDiv'>GAME OVER</div>");
+      console.log("loser");
+    }
+  }
+}
+
+// function checkForLoss() {
+//   console.log($("main div").each(function() {return $("main div")}));
+// }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
 
