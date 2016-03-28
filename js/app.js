@@ -199,7 +199,7 @@ split.replaceMatchedAtZero = function() {
 
 split.checkForLoss = function() {
   var divs = [];
-  var gameOver = "<div id='gameOver'><article><p>GAME OVER</p><p>SCORE : " + split.score + "</p><p id='restart'>RESTART</p></article></div>";
+  var gameOver = "<div id='gameOver'><article><p>GAME OVER</p><p>SCORE : " + (split.score + 1) + "</p><p id='restart'>RESTART</p></article></div>";
 
   if ($("#playArea").html() === gameOver) {
     return;
@@ -276,25 +276,46 @@ split.determineDirection = function() {
 
 split.colourListeners = function() {
   $("#white").on("click", function() {
-    ($("#playArea")).css("background", "white");
+    $("#playArea").css("background", "white");
+    $("main").css("border-color", "white");
+    $("#scoreboard").css("border-color", "white");
+    $("#acknowledgement").css("border-color", "white");
   });
   $("#red").on("click", function() {
-    ($("#playArea")).css("background", "red");
+    $("#playArea").css("background", "red");
+    $("main").css("border-color", "red");
+    $("#scoreboard").css("border-color", "red");
+    $("#acknowledgement").css("border-color", "red");
   });
   $("#blue").on("click", function() {
-    ($("#playArea")).css("background", "blue");
+    $("#playArea").css("background", "blue");
+    $("main").css("border-color", "blue");
+    $("#scoreboard").css("border-color", "blue");
+    $("#acknowledgement").css("border-color", "blue");
   });
   $("#green").on("click", function() {
-    ($("#playArea")).css("background", "green");
+    $("#playArea").css("background", "green");
+    $("main").css("border-color", "green");
+    $("#scoreboard").css("border-color", "green");
+    $("#acknowledgement").css("border-color", "green");
   });
   $("#yellow").on("click", function() {
-    ($("#playArea")).css("background", "yellow");
+    $("#playArea").css("background", "yellow");
+    $("main").css("border-color", "yellow");
+    $("#scoreboard").css("border-color", "yellow");
+    $("#acknowledgement").css("border-color", "yellow");
   });
   $("#purple").on("click", function() {
-    ($("#playArea")).css("background", "purple");
+    $("#playArea").css("background", "purple");
+    $("main").css("border-color", "purple");
+    $("#scoreboard").css("border-color", "purple");
+    $("#acknowledgement").css("border-color", "purple");
   });
   $("#orange").on("click", function() {
-    ($("#playArea")).css("background", "orange");
+    $("#playArea").css("background", "orange");
+    $("main").css("border-color", "orange");
+    $("#scoreboard").css("border-color", "orange");
+    $("#acknowledgement").css("border-color", "orange");
   });
 }
 
