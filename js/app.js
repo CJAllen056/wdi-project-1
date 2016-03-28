@@ -164,31 +164,27 @@ split.matchedCountdown = function() {
 
 split.replaceMatchedAtZero = function() {
   $(".matchedDiv").each(function() {
-    var done = 0;
+    var done = false;
+
+    var replacementWidth = parseInt($(this).attr("class").substr(1, 2)) * 2;
+    var replacementHeight = parseInt($(this).attr("class").substr(4)) * 2;
+    var replacementTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+    var replacementLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
 
     if ($(this).html() === "0") {
       $(".matchedDiv").each(function() {
         if ($(this).html() === "0") {
           $(this).fadeOut(80).fadeIn(80).fadeOut(80, function() {
             $(this).remove();
-            if (done % 4 === 0) {
-              var replacementWidth = parseInt($(this).attr("class").substr(1, 2)) * 2;
-              var replacementHeight = parseInt($(this).attr("class").substr(4)) * 2;
-              var replacementTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
-              var replacementLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-
-              split.score += (replacementWidth * replacementHeight);
+            if (done === false) {
+              done = true;
 
               $("#playArea").append("<div class='b0" + replacementWidth + "x0" + replacementHeight + "' style='top: " + replacementTop + "px; left: " + replacementLeft + "px'></div>");
-              // $(".matchedDiv").each(function() {
-              //   var currentValue = $(this).html();
-              //   $(this).html(Math.ceil(currentValue/2));
-              // });
             }
-            done++;
           });
         }
       });
+      split.score += (replacementHeight * replacementWidth)/4;
     }
   });
 }
