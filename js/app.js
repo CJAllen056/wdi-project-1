@@ -24,37 +24,43 @@ split.divId = 0;
 
 split.play = function() {
   $("#playArea").on("click", "div", split.setListeners);
+  $("#playArea").on("click", "#restart", split.restartGame);
   split.colourListeners();
 }
 
 // The setListeners function is the function that play uses to set the listeners....
 
 split.setListeners = function() {
-    var divClass = $(this).attr("class");
-    var divWidth = $(this).attr("class").substr(1, 2);
-    var divHeight = $(this).attr("class").substr(4);
-    var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
-    var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
-    var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
-    var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-    if (split.direction === "horiz" && (divHeight <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
-      return;
-    } else if (split.direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
-      return;
-    }
-    split.splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
-    split.playSounds();
-    split.checkForLoss();
-    split.matchedCountdown();
-    split.replaceMatchedAtZero();
-    split.checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
-    split.checkForLoss();
-    split.countUp();
-    split.determineDirection();
-    split.displayTurn();
-    split.displayDirection();
-    split.displayScore();
+  var divClass = $(this).attr("class");
+
+  if (split.direction === "horiz" && (divHeight <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
+    return;
+  } else if (split.direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
+    return;
+  } else if ($("main").first() === $("#gameOver")) {
+    return;
   }
+
+  var divWidth = $(this).attr("class").substr(1, 2);
+  var divHeight = $(this).attr("class").substr(4);
+  var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
+  var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
+  var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+  var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+
+  split.splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
+  split.playSounds();
+  split.checkForLoss();
+  split.matchedCountdown();
+  split.replaceMatchedAtZero();
+  split.checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
+  split.checkForLoss();
+  split.countUp();
+  split.determineDirection();
+  split.displayTurn();
+  split.displayDirection();
+  split.displayScore();
+}
 
 // The splitBox function splits any clicked box in half, replacing it with two boxes of half the size. The direction of the split is determined by the variable: direction. If the box is too small, it cannot be split. It positions the new boxes absolutely, based on the previous boxes position.
 
@@ -193,7 +199,7 @@ split.replaceMatchedAtZero = function() {
 
 split.checkForLoss = function() {
   var divs = [];
-  var gameOver = "<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>";
+  var gameOver = "<div id='gameOver'><article><p>GAME OVER</p><p>SCORE : " + split.score + "</p><p id='restart'>RESTART</p></article></div>";
 
   if ($("#playArea").html() === gameOver) {
     return;
@@ -224,6 +230,13 @@ split.checkForLoss = function() {
       $("#playArea").fadeIn(600);
     }
   }
+}
+
+split.restartGame = function() {
+  $("#gameOver").replaceWith("<div class='b08x16'></div>");
+  split.direction = "horiz";
+  split.turn = 0;
+  split.score = 0;
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
