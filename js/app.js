@@ -42,6 +42,7 @@ function setListeners() {
       return;
     }
     splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
+    checkForLoss();
     matchedCountdown();
     removeMatchedAtZero();
     checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
@@ -183,9 +184,10 @@ function checkForLoss() {
         divs.push($(this).attr("class").substr(4));
       }
     });
-    console.log(divs, "x");
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) || divs.length === 0)  {
+      $("main").fadeOut(300);
       $("main").html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
+      $("main").fadeIn(300);
     }
   } else if (direction === "horiz") {
     $("main div").each(function() {
@@ -193,7 +195,6 @@ function checkForLoss() {
         divs.push($(this).attr("class").substr(1,2));
       }
     });
-    console.log(divs, "x");
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) || divs.length === 0) {
       $("main").html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
     }
