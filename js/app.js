@@ -12,8 +12,6 @@
 
 var split = split || {}
 
-
-
 // Turn determines how many turns have passed since the beginning of the game
 // Direction is used to determine which direction the boxes will split when clicked
 
@@ -24,7 +22,6 @@ split.divId = 0;
 // The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
 
 split.play = function() {
-  console.log(split);
   $("main").on("click", "div", split.setListeners);
 }
 
@@ -46,7 +43,7 @@ split.setListeners = function() {
     split.splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
     split.checkForLoss();
     split.matchedCountdown();
-    split.removeMatchedAtZero();
+    split.replaceMatchedAtZero();
     split.checkMatches(divWidthPx, divHeightPx, divTop, divLeft, divClass);
     split.checkForLoss();
     split.countUp();
@@ -160,13 +157,25 @@ split.matchedCountdown = function() {
   });
 }
 
-// The matched removeMatchedAtZero function makes matched boxes whose html values reach zero dissappear
-
-split.removeMatchedAtZero = function() {
+split.replaceMatchedAtZero = function() {
   $(".matchedDiv").each(function() {
+    var replacementWidth = parseInt($(this).attr("class").substr(1, 2)) * 2;
+    var replacementHeight = parseInt($(this).attr("class").substr(4)) * 2;
+    var replacementTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+    var replacementLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+    var done = false;
+
     if ($(this).html() === "0") {
-      $(this).fadeOut(80).fadeIn(80).fadeOut(80, function() {
-        $(this).remove();
+      $(".matchedDiv").each(function() {
+        if ($(this).html() === "0") {
+          $(this).fadeOut(80).fadeIn(80).fadeOut(80, function() {
+            $(this).remove();
+            if (done == false) {
+              done = true;
+              $("main").append("<div id='" + split.id + "' class='b0" + replacementWidth + "x0" + replacementHeight + "' style='top: " + replacementTop + "px; left: " + replacementLeft + "px'></div>");
+            }
+          });
+        };
       });
     }
   });
@@ -188,7 +197,7 @@ split.checkForLoss = function() {
     });
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) || divs.length === 0)  {
       $("main").fadeOut(300);
-      $("main").html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
+      $("main").setTimeo(300).html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
       $("main").fadeIn(300);
     }
   } else if (split.direction === "horiz") {
@@ -198,7 +207,9 @@ split.checkForLoss = function() {
       }
     });
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) || divs.length === 0) {
-      $("main").html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
+      $("main").fadeOut(300);
+      $("main").setTimeo(300).html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
+      $("main").fadeIn(300);
     }
   }
 }
