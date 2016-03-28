@@ -43,6 +43,7 @@ split.setListeners = function() {
       return;
     }
     split.splitBox(divWidth, divHeight, divWidthPx, divHeightPx, divTop, divLeft);
+    split.playSounds();
     split.checkForLoss();
     split.matchedCountdown();
     split.replaceMatchedAtZero();
@@ -198,7 +199,7 @@ split.checkForLoss = function() {
   var divs = [];
   var gameOver = "<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>";
 
-  if ($("playArea").html() === gameOver) {
+  if ($("#playArea").html() === gameOver) {
     return;
   } else if (split.direction === "vert") {
     $("#playArea div").each(function() {
@@ -227,8 +228,6 @@ split.checkForLoss = function() {
       $("#playArea").fadeIn(600);
     }
   }
-  console.log(gameOver);
-  console.log($("playArea").html());
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
@@ -288,6 +287,17 @@ split.colourListeners = function() {
   $("#orange").on("click", function() {
     ($("#playArea")).css("background", "orange");
   });
+}
+
+split.playSounds = function() {
+  var audio = $("audio")
+  if (split.direction === "horiz") {
+    audio.attr("src", "./sounds/sound1.mp3");
+    audio[0].play();
+  } else if (split.direction === "vert") {
+    audio.attr("src", "./sounds/sound2.mp3")
+    audio[0].play();
+  }
 }
 
 $(split.play);
