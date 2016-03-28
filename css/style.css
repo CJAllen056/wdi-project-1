@@ -1,6 +1,15 @@
 body {
   text-align: center;
   font-family:'Orbitron', sans-serif;
+  margin: 0;
+  background: black;
+}
+
+main {
+  width: 502px;
+  height: 673px;
+  margin: 10px auto;
+  border: 1px dashed white;
 }
 
 #scoreboard {
@@ -10,15 +19,17 @@ body {
   color: white;
   background: black;
   margin: 0;
+  border-right: 1px dashed white;
+  border-left: 1px dashed white;
 }
 
-ul {
+#scoreboard ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-li {
+#scoreboard li {
   height: 76px;
   width: 76px;
   border: 2px solid white;
@@ -27,27 +38,86 @@ li {
 }
 
 li#direction {
-  margin: 110px 5px 110px 5px;
+  margin: 109px 5px 109px 5px;
   font-size: 50px
 }
 
-main {
-  margin: 0 auto;
-  width: 320px;
+#colourPicker {
+  width: 90px;
   height: 640px;
-  border: 1px solid white;
-  padding: 0;
   float: left;
+  color: white;
+  background: black;
+  margin: 0;
 }
 
-main div {
+#colourPicker ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#colourPicker .colours {
+  height: 76px;
+  width: 76px;
+  margin: 5px;
+  line-height: 76px;
+}
+
+#colourHeading {
+  height: 29px;
+  border: 2px solid;
+  margin: 5px;
+  line-height: 29px;
+}
+
+#white {
+  border: 2px solid white;
+}
+
+#red {
+  border: 2px solid red;
+}
+
+#blue {
+  border: 2px solid blue;
+}
+
+#green {
+  border: 2px solid green;
+}
+
+#yellow {
+  border: 2px solid yellow;
+}
+
+#purple {
+  border: 2px solid purple;
+}
+
+#orange {
+  border: 2px solid orange;
+}
+
+
+#playArea {
+  margin: 0 auto;
+  width: 318px;
+  height: 638px;
+  border: 1px solid black;
+  padding: 0;
+  float: left;
+  background: white;
+  position: relative;
+}
+
+#playArea div {
   float: left;
   background: black;
-  border: 1px solid white;
   position: absolute;
 }
 
-.matchedDiv {
+#playArea .matchedDiv {
   background: grey;
 }
 
@@ -151,4 +221,14 @@ main div {
   height: 638px;
   top: 0px;
   left: 0px;
+}
+
+#acknowledgement {
+  width: 502px;
+  height: 30px;
+  border-top: 1px dashed white;
+  float: left;
+  font-size: 15px;
+  color: white;
+  line-height: 30px;
 }

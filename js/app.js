@@ -16,13 +16,15 @@ var split = split || {}
 // Direction is used to determine which direction the boxes will split when clicked
 
 split.turn = 0;
+split.score = 0;
 split.direction = "horiz";
 split.divId = 0;
 
-// The play function runs when the dom loads, and applies click events to all divs in the main section, including any div events that are generated after the dom loads.
+// The play function runs when the dom loads, and applies click events to all divs in the #playArea section, including any div events that are generated after the dom loads.
 
 split.play = function() {
-  $("main").on("click", "div", split.setListeners);
+  $("#playArea").on("click", "div", split.setListeners);
+  split.colourListeners();
 }
 
 // The setListeners function is the function that play uses to set the listeners....
@@ -50,6 +52,7 @@ split.setListeners = function() {
     split.determineDirection();
     split.displayTurn();
     split.displayDirection();
+    split.displayScore();
   }
 
 // The splitBox function splits any clicked box in half, replacing it with two boxes of half the size. The direction of the split is determined by the variable: direction. If the box is too small, it cannot be split. It positions the new boxes absolutely, based on the previous boxes position.
@@ -69,13 +72,13 @@ split.splitBox = function(width, height, widthpx, heightpx, top, left) {
 split.checkMatches = function(width, height, top, left, classX) {
   if (split.direction === "horiz") {
     var newDivClass = classX.substr(0, 4) + "0" + classX.substr(4)/2;
-    $("main div").each(function() {
+    $("#playArea div").each(function() {
       var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
       var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
       var divClass = $(this).attr("class");
       var thisDivId = $(this).attr("id");
       if (divTop === top && (divLeft === (left + width + 2)) && newDivClass === divClass) {
-        $("main div").each(function() {
+        $("#playArea div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
@@ -84,7 +87,7 @@ split.checkMatches = function(width, height, top, left, classX) {
           }
         });
       } else if ((divTop === top && (divLeft === (left - width - 2))) && newDivClass === divClass) {
-        $("main div").each(function() {
+        $("#playArea div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
@@ -96,27 +99,27 @@ split.checkMatches = function(width, height, top, left, classX) {
     });
   } else if (split.direction === "vert") {
     var newDivClass = "b0" + classX.substr(1, 2)/2 + classX.substr(3);
-    $("main div").each(function() {
+    $("#playArea div").each(function() {
       var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
       var divLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
       var divClass = $(this).attr("class");
       var thisDivId = $(this).attr("id");
       if (divTop === (top + height + 2) && (divLeft === left) && newDivClass === divClass) {
-        $("main div").each(function() {
+        $("#playArea div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if (divTop2 === (top + height + 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            split.setToMatched(this, thisDivId, height);
+            split.setToMatched(this, thisDivId, height * 2);
           }
         });
       } else if (divTop === (top - height - 2) && (divLeft === left) && newDivClass === divClass) {
-        $("main div").each(function() {
+        $("#playArea div").each(function() {
           var divTop2 = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
           var divLeft2 = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
           var divClass2 = $(this).attr("class");
           if (divTop2 === (top - height - 2) && (divLeft2 === (left + (width + 2)/2)) && newDivClass === divClass2) {
-            split.setToMatched(this, thisDivId, height);
+            split.setToMatched(this, thisDivId, height * 2);
           }
         });
       }
@@ -154,64 +157,78 @@ split.matchedCountdown = function() {
   $(".matchedDiv").each(function() {
     var currentVal = $(this).html();
     $(this).html(currentVal - 1);
+    split.score++;
   });
 }
 
 split.replaceMatchedAtZero = function() {
   $(".matchedDiv").each(function() {
-    var replacementWidth = parseInt($(this).attr("class").substr(1, 2)) * 2;
-    var replacementHeight = parseInt($(this).attr("class").substr(4)) * 2;
-    var replacementTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
-    var replacementLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
-    var done = false;
+    var done = 0;
 
     if ($(this).html() === "0") {
       $(".matchedDiv").each(function() {
         if ($(this).html() === "0") {
           $(this).fadeOut(80).fadeIn(80).fadeOut(80, function() {
             $(this).remove();
-            if (done == false) {
-              done = true;
-              $("main").append("<div id='" + split.id + "' class='b0" + replacementWidth + "x0" + replacementHeight + "' style='top: " + replacementTop + "px; left: " + replacementLeft + "px'></div>");
+            if (done % 4 === 0) {
+              var replacementWidth = parseInt($(this).attr("class").substr(1, 2)) * 2;
+              var replacementHeight = parseInt($(this).attr("class").substr(4)) * 2;
+              var replacementTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
+              var replacementLeft = parseInt($(this).css("left").substr(0, $(this).css("left").length-2));
+
+              split.score += (replacementWidth * replacementHeight);
+
+              $("#playArea").append("<div class='b0" + replacementWidth + "x0" + replacementHeight + "' style='top: " + replacementTop + "px; left: " + replacementLeft + "px'></div>");
+              // $(".matchedDiv").each(function() {
+              //   var currentValue = $(this).html();
+              //   $(this).html(Math.ceil(currentValue/2));
+              // });
             }
+            done++;
           });
-        };
+        }
       });
     }
   });
-}
-
-split.replaceMatched = function() {
-
 }
 
 // The checkForLoss function loops through all the divs in the play area and checks if there are any clickable ones. If not, it gives a Game Over message.
 
 split.checkForLoss = function() {
   var divs = [];
-  if (split.direction === "vert") {
-    $("main div").each(function() {
+  var gameOver = "<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>";
+
+  if ($("playArea").html() === gameOver) {
+    return;
+  } else if (split.direction === "vert") {
+    $("#playArea div").each(function() {
       if ($(this).attr("class").indexOf("matchedDiv") === -1) {
         divs.push($(this).attr("class").substr(4));
       }
     });
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1 && divs.indexOf("16")) || divs.length === 0)  {
-      $("main").fadeOut(300);
-      $("main").setTimeo(300).html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
-      $("main").fadeIn(300);
+      $("#playArea").fadeOut(1000);
+      setTimeout(function() {
+        $("#playArea").html(gameOver);
+      }, 1000);
+      $("#playArea").fadeIn(600);
     }
   } else if (split.direction === "horiz") {
-    $("main div").each(function() {
+    $("#playArea div").each(function() {
       if ($(this).attr("class").indexOf("matchedDiv") === -1) {
         divs.push($(this).attr("class").substr(1,2));
       }
     });
     if ((divs.indexOf("02") === -1 && divs.indexOf("04") === -1 && divs.indexOf("08") === -1) || divs.length === 0) {
-      $("main").fadeOut(300);
-      $("main").setTimeo(300).html("<div class='b08x16 matchedDiv' style='line-height: 638px; font-size: 40px'>GAME OVER</div>");
-      $("main").fadeIn(300);
+      $("#playArea").fadeOut(1000);
+      setTimeout(function() {
+        $("#playArea").html(gameOver);
+      }, 1000);
+      $("#playArea").fadeIn(600);
     }
   }
+  console.log(gameOver);
+  console.log($("playArea").html());
 }
 
 // The displayTurn function pushes the turn count onto the scoreboard. The displayDirection function pushes the direction of the next split onto the scoreboard.
@@ -228,10 +245,15 @@ split.displayDirection = function() {
   }
 }
 
+split.displayScore = function() {
+  $("#score").html(split.score);
+}
+
 // The countUp function counts what turn you are on, adding one to the counter for every click.
 
 split.countUp = function() {
   split.turn++;
+  split.score++;
 }
 
 // The determineDirection function switches between horizontal and vertical splits, alternating every turn.
@@ -242,6 +264,30 @@ split.determineDirection = function() {
   } else {
     split.direction = "vert";
   }
+}
+
+split.colourListeners = function() {
+  $("#white").on("click", function() {
+    ($("#playArea")).css("background", "white");
+  });
+  $("#red").on("click", function() {
+    ($("#playArea")).css("background", "red");
+  });
+  $("#blue").on("click", function() {
+    ($("#playArea")).css("background", "blue");
+  });
+  $("#green").on("click", function() {
+    ($("#playArea")).css("background", "green");
+  });
+  $("#yellow").on("click", function() {
+    ($("#playArea")).css("background", "yellow");
+  });
+  $("#purple").on("click", function() {
+    ($("#playArea")).css("background", "purple");
+  });
+  $("#orange").on("click", function() {
+    ($("#playArea")).css("background", "orange");
+  });
 }
 
 $(split.play);
