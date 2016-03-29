@@ -32,7 +32,9 @@ split.play = function() {
 
 split.setListeners = function() {
   var divClass = $(this).attr("class");
-
+  var divWidth = $(this).attr("class").substr(1, 2);
+  var divHeight = $(this).attr("class").substr(4);
+  
   if (split.direction === "horiz" && (divHeight <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
     return;
   } else if (split.direction === "vert" && (divWidth <= 1 || divClass.indexOf("matchedDiv") !== -1)) {
@@ -41,8 +43,6 @@ split.setListeners = function() {
     return;
   }
 
-  var divWidth = $(this).attr("class").substr(1, 2);
-  var divHeight = $(this).attr("class").substr(4);
   var divWidthPx = parseInt($(this).css("width").substr(0, $(this).css("width").length-2));
   var divHeightPx = parseInt($(this).css("height").substr(0, $(this).css("height").length-2));
   var divTop = parseInt($(this).css("top").substr(0, $(this).css("top").length-2));
