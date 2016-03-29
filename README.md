@@ -1,10 +1,13 @@
 # Split
+
+![Split game](./images/gameImage.png)
 ## Introduction
 Split is a clone of the game SPL-T developed by Simogo. It was programmed in Javascript as my first project during the Web Development Immersive programme at General Assembly London.
 
 Split is a 1 player puzzle game, where the aim is to get as high score as possible.
 
 ## How to Play
+To play, go to [https://fathomless-lowlands-96200.herokuapp.com/](https://fathomless-lowlands-96200.herokuapp.com/)
 
 The player clicks boxes to split them in two. Splits (turns) alternate between horizontal and vertical (the current direction is displayed on the scoreboard, indicated by an 'H' or 'V'). If a block is too small, it can't be split. For example, if the current split is vertical, a box has to be wide enough to be split.
 
